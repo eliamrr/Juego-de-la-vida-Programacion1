@@ -1,3 +1,4 @@
+from random import randint
 def pedir_nombre()->str:
     "Funcion que pìde el nombre del jugador y lo retorna"
     nombre = input("Nombre: ")
@@ -14,7 +15,6 @@ def desea_jugar(name:str)-> bool:
     return retornar
     
 def tirar_dado(desde:int, hasta:int)-> int:
-    from random import randint
     numero_randon = randint(desde,hasta)
     return numero_randon
 
@@ -43,7 +43,6 @@ def mostrar_pregunta(lista:list, indice:int):
     print(f"b) {lista[indice]["respuesta_b"]}")
     print(f"c) {lista[indice]["respuesta_c"]}")
 
-
 def pedir_respuesta(a:str,b:str,c:str)->str:
     respuesta = input(f"Responda con {a} {b} {c}: ").lower()
     while respuesta != a and respuesta != b and respuesta != c:
@@ -52,28 +51,30 @@ def pedir_respuesta(a:str,b:str,c:str)->str:
 
 def verificar_respuesta(lista:list, indice:int ,respuesta:str)->bool:
     retornar = False
-    if lista[indice]["respuesta:_correcta"] == respuesta:
+    if lista[indice]["respuesta_correcta"] == respuesta:
         retornar = True
     return retornar
 def eliminar_pregunta(lista:list, indice:int)->int:
     del lista[indice]
 
-def reconpensa(casilleros:list, preguntas:list,dado:int):
+def reconpensa(casilleros:list, preguntas:list, lista_preguntas_correctas:list,dado:int)-> int:
+    puntos = 0
     respuesta = casilleros[dado]
     if respuesta == 1:
         puntos  += 3000
     elif respuesta == -1:
         puntos -= 3000
     else:
-        pregunta_randon = tirar_dado(0,len(preguntas - 1))
+        pregunta_randon = tirar_dado(0,len(preguntas)-1)
         mostrar_pregunta(preguntas,pregunta_randon)
         respuesta = pedir_respuesta("a","b","c")
-        respuesta_final = verificar_respuesta(casilleros, pregunta_randon, respuesta)
+        respuesta_final = verificar_respuesta(preguntas, pregunta_randon, respuesta)
         if respuesta_final:
             puntos += 3000
-            eliminar_pregunta(casilleros, pregunta_randon)
+            lista_preguntas_correctas.append(preguntas[pregunta_randon])
         else:
             puntos -= 3000
+        eliminar_pregunta(preguntas, pregunta_randon)
     return puntos
 
 def descripcion_juego(texto:str):

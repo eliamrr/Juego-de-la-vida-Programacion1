@@ -16,6 +16,7 @@ iniciar_a_jugar = desea_jugar(nombre)
 
 #Logica
 if iniciar_a_jugar:
+    pregunstas_correctas = []
     inicio = True
     while inicio:
         ## Tiramos dado
@@ -27,6 +28,12 @@ if iniciar_a_jugar:
         ## Condicionales
         if inicio:
             ## Extracion de reconpensa
-            puntos += reconpensa(casilleros, preguntas, numero_randon_dado)
+            puntos += reconpensa(casilleros,preguntas,pregunstas_correctas, numero_randon_dado,)
             ## Verifica puntos 
             inicio = verificar_puntos(0, puntos)
+else:
+    if len(casilleros > 0):
+        despedida = f"Gracias {nombre} por participar"
+    else:
+        despedida = f"Gracias {nombre}"
+    descripcion_juego(despedida)
