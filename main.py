@@ -4,36 +4,46 @@ from copy import deepcopy
 
 # Lista de 15 casilleros (elementos del 0 al 14) para el tablero del Juego de la Vida.
 casilleros = [0, 1, -1, -1, 0, 1, -1, -1, 0, 1, -1, 0, 1, 0, 1]
-historial = []
 
 # pedimos Nombre
 nombre = pedir_nombre()
-puntos = 15000
-preguntas = deepcopy(preguntas)
+    
+# Bienvenida preguntar si desea jugar?
+mostrar_texto(f"Hola, {nombre.capitalize()}. ¿Deseas jugar?:")
+iniciar_partida = desea_jugar()
 
-#preguntar si desea jugar
-iniciar_a_jugar = desea_jugar(nombre)
+# Logica
+# Si quiere jugar
+if iniciar_partida:
+    ## Datos del jugador
+    preguntas = deepcopy(preguntas) # Preguntas trivia
+    puntos = 15000 # Puntos
+    indices_preguntas_correcta = [] # Preguntas correctas
+    ubicacion = 0
 
-#Logica
-if iniciar_a_jugar:
-    pregunstas_correctas = []
-    inicio = True
-    while inicio:
-        ## Tiramos dado
-        numero_randon_dado = tirar_dado(1,6)
-        ## Guardamos la pocision
-        guardar_pocision(historial, numero_randon_dado)
-        ## Verificamos la pocision
-        inicio = verificar_pocision(casilleros, historial)
-        ## Condicionales
-        if inicio:
-            ## Extracion de reconpensa
-            puntos += reconpensa(casilleros,preguntas,pregunstas_correctas, numero_randon_dado,)
-            ## Verifica puntos 
-            inicio = verificar_puntos(0, puntos)
+    ## Empieza el juego
+    while iniciar_partida:
+        mostrar_texto(f"{nombre.capitalize()}, estas la Casilla [{ubicacion}]") # Mostramos la pocision
+        dado = generar_num_aleatorio(1,6) # Tiramos dado
+        mostrar_texto(f"Has tirado el dado y el resultado es: {dado}") # Mostrar dado
+        ubicacion += dado # Guardamos la pocision
+        iniciar_partida = verificar_pocision(ubicacion, casilleros) # verificamos pocision
+        
+        ## Reconpensas
+        if iniciar_partida:
+            puntos += reconpensa(casilleros,preguntas, indices_preguntas_correcta, dado)
+            iniciar_partida = verificar_puntos(0, puntos)
+        else:
+            mostrar_texto(f"Gracias por participar quedo en la ubicaion: [{ubicacion}]")
+        mostrar_texto(f"Puntos totale: {puntos}")
+
+    ## Mostramos datos alcanzados
+    if ubicacion > len(casilleros):
+        mostrar_texto(f"Felicidades gano llebo  la ubicacion: [{ubicacion}]")
+    
+
+## No quiere jugar
 else:
-    if len(casilleros > 0):
-        despedida = f"Gracias {nombre} por participar"
-    else:
-        despedida = f"Gracias {nombre}"
-    descripcion_juego(despedida)
+    mostrar_texto(f"!Entendido¡, {nombre} sera para la proxima")
+
+
