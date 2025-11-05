@@ -28,18 +28,19 @@ def generar_num_aleatorio(desde:int, hasta:int)-> int:
 
 def verificar_pocision(ubicaion:int, casilleros:list) -> bool:
     retorno = False
-    if ubicaion <= len(casilleros):
+    if ubicaion <= len(casilleros) - 1 :
         retorno = True
     return retorno
 
-def reconpensa(casilleros:list,preguntas:list, list_ind_preg_correctas:list, dado:int)-> int:
-    casillero = casilleros[dado]
+def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ubicaion:int)-> int:
+    casillero = casilleros[ubicaion - 1] 
     puntos_nuevos = 0
     if casillero == 1:
         puntos_nuevos += 3000
     elif casillero == -1:
         puntos_nuevos -= 3000
     else:
+        mostrar_texto(f"{"-"*20}!Trivia!{"-"*20}")
         ind_preg_aleatoria = generar_num_aleatorio(0, len(preguntas) - 1) # genera un indice de pregunta aleatoria
         mostrar_pregunta(preguntas, ind_preg_aleatoria)
         respuesta = pedir_respuesta("a", "b", "c") # Respueta
@@ -51,29 +52,29 @@ def reconpensa(casilleros:list,preguntas:list, list_ind_preg_correctas:list, dad
             puntos_nuevos -= 3000
         # Eliminamos preguntas
         eliminar_pregunta(preguntas, ind_preg_aleatoria)
-    mostrar_texto(f"Has obtenido {puntos_nuevos} puntos")
+    mostrar_texto(f"Has obtenido: {puntos_nuevos} puntos")
     return puntos_nuevos
 
 
 def mostrar_pregunta(lista:list, indice:int):
-    print(f"{"-"*20}Pregunta{   "-"*20}")
     print(f"{lista[indice]["pregunta"]}")
-    print(f"a) {lista[indice]["respuesta_a"]}")
-    print(f"b) {lista[indice]["respuesta_b"]}")
-    print(f"c) {lista[indice]["respuesta_c"]}")
+    print(f"> a) {lista[indice]["respuesta_a"]}")
+    print(f"> b) {lista[indice]["respuesta_b"]}")
+    print(f"> c) {lista[indice]["respuesta_c"]}")
     
 def pedir_respuesta(a:str,b:str,c:str)->str:
-    respuesta = input(f"Responda con {a} {b} {c}: ").lower()
+    respuesta = input(f"Responda con ({a}, {b}, {c}): > ").lower()
     while respuesta != a and respuesta != b and respuesta != c:
-        respuesta = input(f"Error, responda con {a} {b} {c}: ").lower()
+        respuesta = input(f"Error, responda con ({a}, {b}, {c}): > ").lower()
     return respuesta
     
 def verificar_respuesta(lista:list, indice:int ,respuesta:str)->bool:
     retornar = False
     if lista[indice]["respuesta_correcta"] == respuesta:
         retornar = True
+    mostrar_texto(f"Respuesta correcta: {lista[indice][f"respuesta_{lista[indice]["respuesta_correcta"]}"]}")
     return retornar
-        
+
 def eliminar_pregunta(lista:list, indice:int)->int:
     del lista[indice]
 

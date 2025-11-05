@@ -11,6 +11,7 @@ nombre = pedir_nombre()
 # Bienvenida preguntar si desea jugar?
 mostrar_texto(f"Hola, {nombre.capitalize()}. ¿Deseas jugar?:")
 iniciar_partida = desea_jugar()
+mostrar_texto(casilleros) #ELIMIINARRRRRRRRRRRRRRRRRRRRRRRR------------------------------------
 
 # Logica
 # Si quiere jugar
@@ -20,18 +21,22 @@ if iniciar_partida:
     puntos = 15000 # Puntos
     indices_preguntas_correcta = [] # Preguntas correctas
     ubicacion = 0
+    movimientos = 0
 
     ## Empieza el juego
     while iniciar_partida:
-        mostrar_texto(f"{nombre.capitalize()}, estas la Casilla [{ubicacion}]") # Mostramos la pocision
+        mostrar_texto(f"\n{nombre.capitalize()}, estas la Casilla [{ubicacion}]") # Mostramos la pocision
         dado = generar_num_aleatorio(1,6) # Tiramos dado
         mostrar_texto(f"Has tirado el dado y el resultado es: {dado}") # Mostrar dado
         ubicacion += dado # Guardamos la pocision
         iniciar_partida = verificar_pocision(ubicacion, casilleros) # verificamos pocision
+        movimientos += 1
         
         ## Reconpensas
         if iniciar_partida:
-            puntos += reconpensa(casilleros,preguntas, indices_preguntas_correcta, dado)
+            mostrar_texto(f"Has avanzado hasta la casilla: {ubicacion}")
+            mostrar_texto(f"Feliciades te salio: {casilleros[ubicacion - 1]}")#ELIMINARRRRRRRRRRRRRRRRRRRRRRRRRRRRRR-----------
+            puntos += reconpensa(casilleros, preguntas, indices_preguntas_correcta, ubicacion)
             iniciar_partida = verificar_puntos(0, puntos)
         else:
             mostrar_texto(f"Gracias por participar quedo en la ubicaion: [{ubicacion}]")
@@ -40,7 +45,7 @@ if iniciar_partida:
     ## Mostramos datos alcanzados
     if ubicacion > len(casilleros):
         mostrar_texto(f"Felicidades gano llebo  la ubicacion: [{ubicacion}]")
-    
+    mostrar_texto(f"Moviminetos obtenidos {movimientos}")
 
 ## No quiere jugar
 else:
