@@ -11,6 +11,10 @@ def mostrar_texto(texto:str):
     "Funcion que recibe un texto y lo muestra por pantalla"
     print(texto)
 
+def mostrar_texto_dos(texto:str):
+    "Funcion que recibe un texto y lo muestra por pantalla"
+    print(f"\n{"-" * 20}{texto}{"-"*20}\n")
+
 def desea_jugar()-> bool:
     retornar = False
     print(f"> Si\n> No ")
@@ -40,7 +44,7 @@ def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ub
     elif casillero == -1:
         puntos_nuevos -= 3000
     else:
-        mostrar_texto(f"{"-"*20}!Trivia!{"-"*20}")
+        mostrar_texto(f"{"-" * 20}¡Trivia!{"-"*20}")
         ind_preg_aleatoria = generar_num_aleatorio(0, len(preguntas) - 1) # genera un indice de pregunta aleatoria
         mostrar_pregunta(preguntas, ind_preg_aleatoria)
         respuesta = pedir_respuesta("a", "b", "c") # Respueta
@@ -70,9 +74,14 @@ def pedir_respuesta(a:str,b:str,c:str)->str:
     
 def verificar_respuesta(lista:list, indice:int ,respuesta:str)->bool:
     retornar = False
+    texto = "> ¡INCORRECTO!"
     if lista[indice]["respuesta_correcta"] == respuesta:
         retornar = True
+        texto = "> ¡CORRECTO!"
+    ### Hacer una solo linea --------------------------------------------------------------------------------------------
+    mostrar_texto(texto)
     mostrar_texto(f"Respuesta correcta: {lista[indice][f"respuesta_{lista[indice]["respuesta_correcta"]}"]}")
+    #------------------------------------------------------------------------------------------------
     return retornar
 
 def eliminar_pregunta(lista:list, indice:int)->int:
