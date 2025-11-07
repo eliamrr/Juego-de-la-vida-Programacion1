@@ -17,10 +17,12 @@ def mostrar_texto_dos(texto:str):
 
 def desea_jugar()-> bool:
     retornar = False
-    print(f"> Si\n> No ")
-    respuesta = input("Ingrese: (Si/No): > ").lower()
+    # print(f"> Si\n> No ")
+    respuesta = input("Ingrese: (Si/No): > ")
+    respuesta = convertir_minusculas(respuesta)
     while respuesta != "si" and respuesta != "no":
-        respuesta = input("Error, ingrese (Si/No): > ").lower()
+        respuesta = input("Error, ingrese (Si/No): > ")
+        respuesta = convertir_minusculas(respuesta)
     if respuesta == "si":
         retornar = True
     return retornar
@@ -67,9 +69,11 @@ def mostrar_pregunta(lista:list, indice:int):
     print(f"> c) {lista[indice]["respuesta_c"]}")
     
 def pedir_respuesta(a:str,b:str,c:str)->str:
-    respuesta = input(f"Responda con ({a}, {b}, {c}): > ").lower()
+    respuesta = input(f"Responda con ({a}, {b}, {c}): > ")
+    respuesta = convertir_minusculas(respuesta)
     while respuesta != a and respuesta != b and respuesta != c:
-        respuesta = input(f"Error, responda con ({a}, {b}, {c}): > ").lower()
+        respuesta = input(f"Error, responda con ({a}, {b}, {c}): > ")
+        respuesta = convertir_minusculas(respuesta)
     return respuesta
     
 def verificar_respuesta(lista:list, indice:int ,respuesta:str)->bool:
@@ -93,6 +97,29 @@ def verificar_puntos(minimo:int, puntos:int):
         mostrar_texto("Se quedo sin puntos, juego terminado")
         seguir = False
     return seguir
+def convertir_minusculas(palabra:str)-> str:
+    nueva_palbra = ""
+    for letra in palabra:
+        valor_acscci = ord(letra) #obtine el valor ascci
+        if valor_acscci >= 65 and valor_acscci <= 90:
+            letra = chr(valor_acscci + 32)
+        nueva_palbra += letra
+    return nueva_palbra
+
+def mostrar_tablero(lista:list, titulo:str):
+    mostrar_texto_dos(titulo)
+    mostrar_texto(lista)
+
+
+    
+
+
+
+
+
+
+
+
 
 
 
