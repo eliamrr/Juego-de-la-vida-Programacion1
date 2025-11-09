@@ -17,7 +17,7 @@ def mostrar_texto_dos(texto:str):
 
 def desea_jugar()-> bool:
     retornar = False
-    # print(f"> Si\n> No ")
+    print(f"> Si\n> No ")
     respuesta = input("Ingrese: (Si/No): > ")
     respuesta = convertir_minusculas(respuesta)
     while respuesta != "si" and respuesta != "no":
@@ -25,6 +25,7 @@ def desea_jugar()-> bool:
         respuesta = convertir_minusculas(respuesta)
     if respuesta == "si":
         retornar = True
+
     return retornar
 
 def generar_num_aleatorio(desde:int, hasta:int)-> int:
@@ -32,34 +33,8 @@ def generar_num_aleatorio(desde:int, hasta:int)-> int:
     return numero_randon
 
 
-def verificar_pocision(ubicaion:int, casilleros:list) -> bool:
-    retorno = False
-    if ubicaion <= len(casilleros) - 1 :
-        retorno = True
-    return retorno
 
-def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ubicaion:int)-> int:
-    casillero = casilleros[ubicaion - 1] 
-    puntos_nuevos = 0
-    if casillero == 1:
-        puntos_nuevos += 3000
-    elif casillero == -1:
-        puntos_nuevos -= 3000
-    else:
-        mostrar_texto(f"{"-" * 20}¡Trivia!{"-"*20}")
-        ind_preg_aleatoria = generar_num_aleatorio(0, len(preguntas) - 1) # genera un indice de pregunta aleatoria
-        mostrar_pregunta(preguntas, ind_preg_aleatoria)
-        respuesta = pedir_respuesta("a", "b", "c") # Respueta
-        comprobar_respuesta = verificar_respuesta(preguntas, ind_preg_aleatoria, respuesta )
-        if comprobar_respuesta:
-            puntos_nuevos += 3000
-            list_ind_preg_correctas.append(ind_preg_aleatoria)
-        else:
-            puntos_nuevos -= 3000
-        # Eliminamos preguntas
-        eliminar_pregunta(preguntas, ind_preg_aleatoria)
-    mostrar_texto(f"Has obtenido: {puntos_nuevos} puntos")
-    return puntos_nuevos
+
 
 
 def mostrar_pregunta(lista:list, indice:int):
@@ -83,7 +58,7 @@ def verificar_respuesta(lista:list, indice:int ,respuesta:str)->bool:
         retornar = True
         texto = "> ¡CORRECTO!"
     ### Hacer una solo linea --------------------------------------------------------------------------------------------
-    mostrar_texto(texto)
+    mostrar_texto(f"{"-"*5}{texto}")
     mostrar_texto(f"Respuesta correcta: {lista[indice][f"respuesta_{lista[indice]["respuesta_correcta"]}"]}")
     #------------------------------------------------------------------------------------------------
     return retornar
@@ -91,12 +66,8 @@ def verificar_respuesta(lista:list, indice:int ,respuesta:str)->bool:
 def eliminar_pregunta(lista:list, indice:int)->int:
     del lista[indice]
 
-def verificar_puntos(minimo:int, puntos:int):
-    seguir = True 
-    if puntos <= minimo:
-        mostrar_texto("Se quedo sin puntos, juego terminado")
-        seguir = False
-    return seguir
+
+
 def convertir_minusculas(palabra:str)-> str:
     nueva_palbra = ""
     for letra in palabra:
@@ -110,8 +81,72 @@ def mostrar_tablero(lista:list, titulo:str):
     mostrar_texto_dos(titulo)
     mostrar_texto(lista)
 
+def jugar_turno(datos:dict,casilleros:list):
+    iniciar_partida = datos["vida"]
+    datos["movimientos"] += 1
+    mostrar_texto_dos(f"Movimineto {datos["movimientos"]}")
+    mostrar_texto(f"{datos["nombre"]}, estas la Casilla [{datos["ubicacion"]}]") # Mostramos la pocision
+    dado = generar_num_aleatorio(1,6) # Tiramos dadoa
+    datos["ubicacion"] += dado # Guardamos la pocision
+    datos["dado"] = dado
+    pocision = verificar_pocision(datos["ubicacion"], casilleros) # verificamos pocision
+    puntos = verificar_puntos(0, datos["puntos"])
+    if pocision and puntos:
+        mostrar_texto(f"!Total puntos: {datos['puntos']}")
+    else:
+        iniciar_partida = False
+        if puntos:
+            mostrar_texto(f"Te salio el dado: {datos["dado"]}")
+            mostrar_texto(f"{datos['nombre']}, ¡GANASTE!")
+        elif pocision:
+            mostrar_texto(f"Se quedo sin puntos: {datos["puntos"]}")
+    return iniciar_partida
 
+def verificar_pocision(ubicaion:int, casilleros:list) -> bool:
+    retorno = False
+    if ubicaion <= len(casilleros) - 1 :
+        retorno = True
+    return retorno
+
+def verificar_puntos(minimo:int, puntos:int):
+    seguir = True 
+    if puntos <= minimo:
+        mostrar_texto("Se quedo sin puntos, juego terminado")
+        seguir = False
+    return seguir
+
+def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ubicaion:int)-> int:
+    casillero = casilleros[ubicaion - 1] 
+    puntos_nuevos = 0
+    if casillero == 1:
+        puntos_nuevos += 3000
+    elif casillero == -1:
+        puntos_nuevos -= 3000
+    else:
+        mostrar_texto(f"{"-" * 20}¡Trivia!{"-"*20}")
+        ind_preg_aleatoria = generar_num_aleatorio(0, len(preguntas) - 1) # genera un indice de pregunta aleatoria
+        mostrar_pregunta(preguntas, ind_preg_aleatoria)
+        respuesta = pedir_respuesta("a", "b", "c") # Respueta
+        comprobar_respuesta = verificar_respuesta(preguntas, ind_preg_aleatoria, respuesta )
+        if comprobar_respuesta:
+            puntos_nuevos += 3000
+            list_ind_preg_correctas.append(ind_preg_aleatoria)
+        else:
+            puntos_nuevos -= 3000
+        # Eliminamos preguntas
+        eliminar_pregunta(preguntas, ind_preg_aleatoria)
+    mostrar_texto(f"Has obtenido: {puntos_nuevos} puntos")
+    return puntos_nuevos
     
+
+
+
+
+
+
+
+
+        
 
 
 

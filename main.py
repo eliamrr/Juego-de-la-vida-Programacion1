@@ -3,54 +3,38 @@ from recursos.preguntas import *
 from copy import deepcopy
 from time import sleep
 
-
-# Lista de 15 casilleros (elementos del 0 al 14) para el tablero del Juego de la Vida.
-casilleros = [0, 1, -1, -1, 0, 1, -1, -1, 0, 1, -1, 0, 1, 0, 1]
-# pedimos Nombre
-nombre = pedir_nombre()
-
-# Bienvenida preguntar si desea jugar?
-mostrar_texto(f"Hola, {nombre}. ¿Deseas jugar?:")
+casilleros = [0, 1, -1, -1, 0, 1, -1, -1, 0, 1, -1, 0, 1, 0, 1] # Lista de 15 casilleros (elementos del 0 al 14) para el tablero del Juego de la Vida.
+nombre = pedir_nombre() # pedimos Nombre
+mostrar_texto(f"Hola, {nombre}. ¿Deseas jugar?:") # Bienvenida preguntar si desea jugar?
 iniciar_partida = desea_jugar()
-
 # Logica
-# Si quiere jugar
-if iniciar_partida:
-    #Tablero
-    mostrar_tablero(casilleros, "Tablero")
-
+if iniciar_partida: #Si quiere jugar
+    mostrar_tablero(casilleros, "Tablero") #Tablero
     ## Datos del jugador
-    preguntas = deepcopy(preguntas) # Preguntas trivia
-    puntos = 15000 # Puntos
-    indices_preguntas_correcta = [] # Preguntas correctas
-    ubicacion = 0
-    movimientos = 0
-    ## Empieza el juego
-    while iniciar_partida:
+    jugador = {
+        "nombre": nombre,
+        "preguntas" : deepcopy(preguntas), # Preguntas trivia
+        "puntos" : 15000, # Puntos
+        "indices_preguntas_correcta" : [], # Preguntas correctas
+        "ubicacion" : 0,
+        "movimientos" : 0,
+        "ultimo_dado":None,
+        "vida":True
+    }
+    while jugador["vida"]:  ## Empieza el juego
         sleep(2)
-        movimientos += 1
-        mostrar_texto_dos(f"Movimineto {movimientos}")
-        mostrar_texto(f"{nombre.capitalize()}, estas la Casilla [{ubicacion}]") # Mostramos la pocision
-        dado = generar_num_aleatorio(1,6) # Tiramos dado
-        mostrar_texto(f"Has tirado el dado y el resultado es: {dado}") # Mostrar dado
-        ubicacion += dado # Guardamos la pocision
-        iniciar_partida = verificar_pocision(ubicacion, casilleros) # verificamos pocision
+        jugador["vida"] = jugar_turno(jugador,casilleros)
         ## Reconpensas
-        if iniciar_partida:
-            mostrar_texto(f"Has avanzado hasta la casilla: {ubicacion}\nFeliciades te salio: {casilleros[ubicacion - 1]}")
-            puntos += reconpensa(casilleros, preguntas, indices_preguntas_correcta, ubicacion)
-            iniciar_partida = verificar_puntos(0, puntos)
-        else:
-            mostrar_texto(f"Gracias por participar quedo en la ubicaion: [{ubicacion}]")
-        mostrar_texto(f"Puntos totale: {puntos}")
-        ## Deseas seguir jugando -------------------------------
-        mostrar_texto(f"{nombre}, ¿deseas volver a tirar el dado?")
-        iniciar_partida = desea_jugar()
-    ## Mostramos datos alcanzados
-    if ubicacion > len(casilleros):
-        mostrar_texto(f"Felicidades gano llebo  la ubicacion: [{ubicacion}]")
-## No quiere jugar
-else:
+        if jugador["vida"]:
+            mostrar_texto(f"Te salio el dado: {jugador["dado"]}\nHas avanzado hasta la casilla: {jugador["ubicacion"]}\nFeliciades te salio: {casilleros[jugador["ubicacion"] - 1]}")
+            jugador["puntos"] += reconpensa(casilleros, preguntas, jugador["indices_preguntas_correcta"], jugador["ubicacion"])        
+            mostrar_texto(f"Puntos actualizados: {jugador['puntos']}")
+            ## Deseas seguir jugando -------------------------------
+            mostrar_texto(f"{"-"*50}\n{nombre}, ¿deseas volver a tirar el dado?")
+            jugador["vida"]= desea_jugar()
+        if jugador["vida"] == False:
+            mostrar_texto(f"\n¡{jugador['nombre']}, gracias por jugar!\nUbicaion final: {jugador["ubicacion"]}\nPuntos finales: {jugador['puntos']}")
+else: #No quiere jugar
     mostrar_texto(f"!Entendido¡, {nombre} sera para la proxima")
 
 
