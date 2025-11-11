@@ -1,16 +1,9 @@
-- no automatico
- achicar el while
+<!-- - no automatico -->
+ <!-- achicar el while -->
 - Archivo csv
-- linea final se pasa al mostar la pocision mayor a 15 
-- 
+<!-- - linea final se pasa al mostar la pocision mayor a 15  -->
 
-- Hacer funcion para mostar el tablero - linea(16/17)
-- linea 34/35 modificar a una solo linea 
-
-<!-- - linea 46/47 modificar a una solo linea  -->
-<!-- - linea 82/83 modificar a una solo linea -> todaslas funciones.py  -->
-- chequear tema de los puntos
-- que pasa si responde todas las preguntas respueta correcta e incorrecta
+<!-- - chequear tema de los puntos -->
 - archivico score.csv
 
 

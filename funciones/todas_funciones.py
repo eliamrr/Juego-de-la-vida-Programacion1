@@ -1,5 +1,5 @@
 from random import randint
-
+import csv
 def pedir_nombre()->str:
     "Funcion que pìde el nombre del jugador y lo retorna"
     nombre = input("Nombre: ")
@@ -98,6 +98,9 @@ def jugar_turno(datos:dict,casilleros:list):
         if puntos:
             mostrar_texto(f"Te salio el dado: {datos["dado"]}")
             mostrar_texto(f"{datos['nombre']}, ¡GANASTE!")
+            # Agregar archivo csv------------------------------------------
+            datos_jugador = [datos["nombre"], datos["puntos"]]
+            guardar_datos(datos_jugador, 'w')
         elif pocision:
             mostrar_texto(f"Se quedo sin puntos: {datos["puntos"]}")
     return iniciar_partida
@@ -138,6 +141,13 @@ def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ub
     mostrar_texto(f"Has obtenido: {puntos_nuevos} puntos")
     return puntos_nuevos
     
+def guardar_datos(lista:list, modo:str):
+    with open("archivo.csv", modo, newline="") as archivo: 
+        writer = csv.writer(archivo, delimiter = ';')
+        writer.writerows(lista)
+        
+
+
 
 
 
