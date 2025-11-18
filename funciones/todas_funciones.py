@@ -25,17 +25,11 @@ def desea_jugar()-> bool:
         respuesta = convertir_minusculas(respuesta)
     if respuesta == "si":
         retornar = True
-
     return retornar
 
 def generar_num_aleatorio(desde:int, hasta:int)-> int:
     numero_randon = randint(desde,hasta)
     return numero_randon
-
-
-
-
-
 
 def mostrar_pregunta(lista:list, indice:int):
     print(f"{lista[indice]["pregunta"]}")
@@ -65,8 +59,6 @@ def verificar_respuesta(lista:list, indice:int ,respuesta:str)->bool:
 
 def eliminar_pregunta(lista:list, indice:int)->int:
     del lista[indice]
-
-
 
 def convertir_minusculas(palabra:str)-> str:
     nueva_palbra = ""
@@ -99,8 +91,7 @@ def jugar_turno(datos:dict,casilleros:list):
             mostrar_texto(f"Te salio el dado: {datos["dado"]}")
             mostrar_texto(f"{datos['nombre']}, ¡GANASTE!")
             # Agregar archivo csv------------------------------------------
-            datos_jugador = [datos["nombre"], datos["puntos"]]
-            guardar_datos(datos_jugador, 'w')
+            guardar_datos(datos, "w")
         elif pocision:
             mostrar_texto(f"Se quedo sin puntos: {datos["puntos"]}")
     return iniciar_partida
@@ -140,11 +131,37 @@ def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ub
         eliminar_pregunta(preguntas, ind_preg_aleatoria)
     mostrar_texto(f"Has obtenido: {puntos_nuevos} puntos")
     return puntos_nuevos
+
+# def leer_archivo(nombre:str,mode:str):
+#     try:
+#         with open(nombre, mode) as archivo:
+#             datos = archivo.readlines()
+#             print(datos)
+            
+
+def guardar_datos(datos:dict, modo:str):
+    # Exatraemos datos
+    nombres_columnas = ["Nombre", "Puntos"]
+    matriz = []
+    for i in nombres_columnas:
+        i = convertir_minusculas(i)
+        matriz.append(datos[i])
+
+    with open("score.csv", "w") as archivo:
+        archivo.write(", ".join(nombres_columnas) + "\n")
+        linea = ""
+        for i in matriz:
+            linea += str(i) + ", "
+        linea = linea[:-2]    
+        archivo.write(linea + "\n")
+
+
+
+
+
+
+
     
-def guardar_datos(lista:list, modo:str):
-    with open("archivo.csv", modo, newline="") as archivo: 
-        writer = csv.writer(archivo, delimiter = ';')
-        writer.writerows(lista)
         
 
 

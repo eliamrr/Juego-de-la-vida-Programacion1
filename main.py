@@ -15,8 +15,8 @@ if iniciar_partida: #Si quiere jugar
         "puntos" : 15000, # Puntos
         "indices_preguntas_correcta" : [], # Preguntas correctas
         "ubicacion" : 0,
-        "movimientos" : 0,
-        "ultimo_dado": None,
+        "movimientos" : 0, #estetica
+        "ultimo_dado": None, #estetica
         "vida": True
     }
     while jugador["vida"]:  ## Empieza el juego
