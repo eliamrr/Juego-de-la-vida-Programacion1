@@ -132,13 +132,7 @@ def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ub
     mostrar_texto(f"Has obtenido: {puntos_nuevos} puntos")
     return puntos_nuevos
 
-# def leer_archivo(nombre:str,mode:str):
-#     try:
-#         with open(nombre, mode) as archivo:
-#             datos = archivo.readlines()
-#             print(datos)
             
-
 def guardar_datos(datos:dict, modo:str):
     # Exatraemos datos
     nombres_columnas = ["Nombre", "Puntos"]
@@ -154,6 +148,32 @@ def guardar_datos(datos:dict, modo:str):
             linea += str(i) + ", "
         linea = linea[:-2]    
         archivo.write(linea + "\n")
+
+
+def leer_archivo(nombre:str,mode:str):
+    try:
+        with open(nombre, mode) as archivo:
+            datos = archivo.readlines()
+            print(datos)
+    except:
+        guardar_datos(jugador, "w")
+
+
+    
+jugador = {
+    "nombre": "Eliam",
+    # "preguntas" : deepcopy(preguntas), # Preguntas trivia
+    "puntos" : 15000, # Puntos
+    "indices_preguntas_correcta" : [], # Preguntas correctas
+    "ubicacion" : 0,
+    "movimientos" : 0,
+    "ultimo_dado": None,
+    "vida": True
+}   
+
+leer_archivo("score.csv", "r")
+
+
 
 
 
