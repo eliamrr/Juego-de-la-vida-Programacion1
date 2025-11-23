@@ -13,7 +13,7 @@ def mostrar_texto(texto:str):
 
 def mostrar_texto_dos(texto:str):
     "Funcion que recibe un texto y lo muestra por pantalla"
-    print(f"\n{"-" * 20}{texto}{"-"*20}\n")
+    print(f"\n{'-' * 20}{texto}{'-'*20}\n")
 
 def desea_jugar()-> bool:
     retornar = False
@@ -32,10 +32,10 @@ def generar_num_aleatorio(desde:int, hasta:int)-> int:
     return numero_randon
 
 def mostrar_pregunta(lista:list, indice:int):
-    print(f"{lista[indice]["pregunta"]}")
-    print(f"> a) {lista[indice]["respuesta_a"]}")
-    print(f"> b) {lista[indice]["respuesta_b"]}")
-    print(f"> c) {lista[indice]["respuesta_c"]}")
+    print(f"{lista[indice]['pregunta']}")
+    print(f"> a) {lista[indice]['respuesta_a']}")
+    print(f"> b) {lista[indice]['respuesta_b']}")
+    print(f"> c) {lista[indice]['respuesta_c']}")
     
 def pedir_respuesta(a:str,b:str,c:str)->str:
     respuesta = input(f"Responda con ({a}, {b}, {c}): > ")
@@ -52,8 +52,12 @@ def verificar_respuesta(lista:list, indice:int ,respuesta:str)->bool:
         retornar = True
         texto = "> ¡CORRECTO!"
     ### Hacer una solo linea --------------------------------------------------------------------------------------------
-    mostrar_texto(f"{"-"*5}{texto}")
-    mostrar_texto(f"Respuesta correcta: {lista[indice][f"respuesta_{lista[indice]["respuesta_correcta"]}"]}")
+    mostrar_texto(f"{'-'*5}{texto}")
+    respuesta_correcta_id = lista[indice]['respuesta_correcta']
+    respuesta_correcta_texto = lista[indice][f'respuesta_{respuesta_correcta_id}']
+
+    mostrar_texto(f"Respuesta correcta: {respuesta_correcta_id}) {respuesta_correcta_texto}")
+    
     #------------------------------------------------------------------------------------------------
     return retornar
 
@@ -76,8 +80,8 @@ def mostrar_tablero(lista:list, titulo:str):
 def jugar_turno(datos:dict,casilleros:list):
     iniciar_partida = datos["vida"]
     datos["movimientos"] += 1
-    mostrar_texto_dos(f"Movimineto {datos["movimientos"]}")
-    mostrar_texto(f"{datos["nombre"]}, estas la Casilla [{datos["ubicacion"]}]") # Mostramos la pocision
+    mostrar_texto_dos(f"Movimineto {datos['movimientos']}")
+    mostrar_texto(f"{datos['nombre']}, estas la Casilla [{datos['ubicacion']}]") # Mostramos la pocision
     dado = generar_num_aleatorio(1,6) # Tiramos dadoa
     datos["ubicacion"] += dado # Guardamos la pocision
     datos["dado"] = dado
@@ -88,12 +92,12 @@ def jugar_turno(datos:dict,casilleros:list):
     else:
         iniciar_partida = False
         if puntos:
-            mostrar_texto(f"Te salio el dado: {datos["dado"]}")
+            mostrar_texto(f"Te salio el dado: {datos['dado']}")
             mostrar_texto(f"{datos['nombre']}, ¡GANASTE!")
             # Agregar archivo csv------------------------------------------
             guardar_datos(datos, "w")
         elif pocision:
-            mostrar_texto(f"Se quedo sin puntos: {datos["puntos"]}")
+            mostrar_texto(f"Se quedo sin puntos: {datos['puntos']}")
     return iniciar_partida
 
 def verificar_pocision(ubicaion:int, casilleros:list) -> bool:
@@ -117,7 +121,7 @@ def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ub
     elif casillero == -1:
         puntos_nuevos -= 3000
     else:
-        mostrar_texto(f"{"-" * 20}¡Trivia!{"-"*20}")
+        mostrar_texto(f"{'-' * 20}¡Trivia!{'-'*20}")
         ind_preg_aleatoria = generar_num_aleatorio(0, len(preguntas) - 1) # genera un indice de pregunta aleatoria
         mostrar_pregunta(preguntas, ind_preg_aleatoria)
         respuesta = pedir_respuesta("a", "b", "c") # Respueta
@@ -132,34 +136,28 @@ def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ub
     mostrar_texto(f"Has obtenido: {puntos_nuevos} puntos")
     return puntos_nuevos
 
-            
-def guardar_datos(datos:dict, modo:str):
-    # Exatraemos datos
-    nombres_columnas = ["Nombre", "Puntos"]
-    matriz = []
-    for i in nombres_columnas:
-        i = convertir_minusculas(i)
-        matriz.append(datos[i])
-
-    with open("score.csv", "w") as archivo:
-        archivo.write(", ".join(nombres_columnas) + "\n")
-        linea = ""
-        for i in matriz:
-            linea += str(i) + ", "
-        linea = linea[:-2]    
-        archivo.write(linea + "\n")
 
 
-def leer_archivo(nombre:str,mode:str):
-    try:
-        with open(nombre, mode) as archivo:
-            datos = archivo.readlines()
-            print(datos)
-    except:
-        guardar_datos(jugador, "w")
 
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 jugador = {
     "nombre": "Eliam",
     # "preguntas" : deepcopy(preguntas), # Preguntas trivia
@@ -170,8 +168,60 @@ jugador = {
     "ultimo_dado": None,
     "vida": True
 }   
+def ordenar_lista(lista:list):
+    for i in range(1,len(lista) - 1):
+        for j in range(i + 1, len(lista)):
+            if lista[i][0] > lista[j][0]:
+                aux = lista[i]
+                lista[i] = lista[j]
+                lista[j] = aux
 
-leer_archivo("score.csv", "r")
+
+def escribir_dato(datos:dict, modo:str):
+    with open("score.csv", modo) as archivo:
+        if modo == "w":
+            #Emcabezado
+            nombres_columnas = f"Nombre, Puntos \n"
+            archivo.write(nombres_columnas)
+        #Escibimos datos
+        datos_jugador = f"{datos['nombre']}, {datos['puntos']} \n"
+        archivo.write(datos_jugador)
+
+def leer_datos()->list:
+    lista_ordenada = []
+    with open("score.csv","r") as archivo:
+        lineas = archivo.readlines()
+        for linea in lineas:
+            lista_ordenada.append([linea])
+        
+
+        print(lista_ordenada)
+        ordenar_lista(lista_ordenada)
+        print(" ")
+        print(lista_ordenada)
+    return lista_ordenada
+
+
+
+
+
+
+def trabajar_archivo(datos:dict):
+    #Existen
+    try:
+        with open("score.csv", "r") as archivo:
+            escribir_dato(datos, "a")
+            lista_datos = leer_datos()
+    #Crea uno nuevo
+    except:
+        escribir_dato(datos, "w")
+# trabajar_archivo(jugador)    
+
+
+leer_datos()
+    
+
+
 
 
 
