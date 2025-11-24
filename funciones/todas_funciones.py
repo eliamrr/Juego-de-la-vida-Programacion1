@@ -169,56 +169,81 @@ jugador = {
     "vida": True
 }   
 def ordenar_lista(lista:list):
-    for i in range(1,len(lista) - 1):
+    for i in range(len(lista) - 1):
         for j in range(i + 1, len(lista)):
             if lista[i][0] > lista[j][0]:
                 aux = lista[i]
                 lista[i] = lista[j]
                 lista[j] = aux
+    return 
 
+def agregar_dato(historial:list, jugador:list):
+    dato_a_agregar = convertir_minusculas(f"{jugador[0]}, {jugador[1]}\n")
 
-def escribir_dato(datos:dict, modo:str):
+    historial.append([dato_a_agregar])
+
+def crear_archivo(lista:list, modo):
     with open("score.csv", modo) as archivo:
-        if modo == "w":
-            #Emcabezado
-            nombres_columnas = f"Nombre, Puntos \n"
-            archivo.write(nombres_columnas)
+        #Emcabezado
+        texto_a_agregar = f"Nombre, Puntos \n"
+        archivo.write(texto_a_agregar)
         #Escibimos datos
-        datos_jugador = f"{datos['nombre']}, {datos['puntos']} \n"
-        archivo.write(datos_jugador)
+        texto_a_agregar = f"{lista[0]}, {lista[1]}\n"
+        archivo.write(texto_a_agregar)
+
+def sobreescribir_archivo(lista_datos,modo):
+    with open("score.csv", modo) as archivo:
+        #Emcabezado
+        texto_a_agregar = f"Nombre, Puntos \n"
+        archivo.write(texto_a_agregar)
+
+        for linea in lista_datos:
+                    
+
+            print(linea)
+            # archivo.write(linea)
+
+
 
 def leer_datos()->list:
-    lista_ordenada = []
+    lista_jugadores = []
     with open("score.csv","r") as archivo:
         lineas = archivo.readlines()
         for linea in lineas:
-            lista_ordenada.append([linea])
-        
-
-        print(lista_ordenada)
-        ordenar_lista(lista_ordenada)
-        print(" ")
-        print(lista_ordenada)
-    return lista_ordenada
-
-
-
-
-
+            linea_limpia = linea[:-2]
+            linea_limpia = convertir_minusculas(linea_limpia)
+            if linea_limpia != "nombre, puntos":
+                lista_jugadores.append([convertir_minusculas(linea)])
+    return lista_jugadores
 
 def trabajar_archivo(datos:dict):
     #Existen
+    jugador = [datos["nombre"], datos["puntos"]]
     try:
-        with open("score.csv", "r") as archivo:
-            escribir_dato(datos, "a")
-            lista_datos = leer_datos()
+        lista_datos = leer_datos()
+        # print(lista_datos)
+        # print("")
+
+        agregar_dato(lista_datos, jugador)
+        # print(lista_datos)
+        # print(" ")
+
+        ordenar_lista(lista_datos)
+        print(lista_datos)
+        
+        sobreescribir_archivo(lista_datos, "w")
+
+
+
+
     #Crea uno nuevo
     except:
-        escribir_dato(datos, "w")
-# trabajar_archivo(jugador)    
+        crear_archivo(jugador, "w")
 
 
-leer_datos()
+trabajar_archivo(jugador)    
+
+
     
 
 
