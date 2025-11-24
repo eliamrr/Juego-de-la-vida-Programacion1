@@ -3,7 +3,7 @@ from recursos.preguntas import *
 from copy import deepcopy
 casilleros = [0, 1, -1, -1, 0, 1, -1, -1, 0, 1, -1, 0, 1, 0, 1] # Lista de 15 casilleros (elementos del 0 al 14) para el tablero del Juego de la Vida.
 nombre = pedir_nombre() # pedimos Nombre
-mostrar_texto(f"Hola, {nombre}. ¿Deseas jugar?:") # Bienvenida preguntar si desea jugar?
+print(f"Hola, {nombre}. ¿Deseas jugar?:") # Bienvenida preguntar si desea jugar?
 iniciar_partida = desea_jugar()
 # Logica
 if iniciar_partida: #Si quiere jugar
@@ -23,15 +23,15 @@ if iniciar_partida: #Si quiere jugar
         jugador["vida"] = jugar_turno(jugador,casilleros)
         ## Reconpensas
         if jugador["vida"]:
-            mostrar_texto(f"Te salio el dado: {jugador["dado"]}\nHas avanzado hasta la casilla: {jugador["ubicacion"]}\nFeliciades te salio: {casilleros[jugador["ubicacion"] - 1]}")
+            print(f"Te salio el dado: {jugador['dado']}\nHas avanzado hasta la casilla: {jugador['ubicacion']}\nFeliciades te salio: {casilleros[jugador['ubicacion'] - 1]}")
             jugador["puntos"] += reconpensa(casilleros, preguntas, jugador["indices_preguntas_correcta"], jugador["ubicacion"])        
-            mostrar_texto(f"Puntos actualizados: {jugador['puntos']}")
+            print(f"Puntos actualizados: {jugador['puntos']}")
             ## Deseas seguir jugando -------------------------------
-            mostrar_texto(f"{"-"*50}\n{nombre}, ¿deseas volver a tirar el dado?")
+            print(f"{'-'*50}\n{nombre}, ¿deseas volver a tirar el dado?")
             jugador["vida"]= desea_jugar()
         if jugador["vida"] == False:
-            mostrar_texto(f"\n¡{jugador['nombre']}, gracias por jugar!\nAvansaste hasta la ubicaion: {jugador["ubicacion"]}\nPuntos finales: {jugador['puntos']}")
+            print(f"\n¡{jugador['nombre']}, gracias por jugar!\nAvansaste hasta la ubicaion: {jugador['ubicacion']}\nPuntos finales: {jugador['puntos']}")
 else: #No quiere jugar
-    mostrar_texto(f"!Entendido¡, {nombre} sera para la proxima")
+    print(f"!Entendido¡, {nombre} sera para la proxima")
 
 

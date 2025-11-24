@@ -1,17 +1,12 @@
 from random import randint
-import csv
 def pedir_nombre()->str:
-    "Funcion que pìde el nombre del jugador y lo retorna"
+    "Funcion que pìde el nombre del jugador y lo valida y lo retorna"
     nombre = input("Nombre: ")
     while len(nombre) <= 0:
         nombre = input("Por favor ingrese un nombre: ")
     return nombre
 
-def mostrar_texto(texto:str):
-    "Funcion que recibe un texto y lo muestra por pantalla"
-    print(texto)
-
-def mostrar_texto_dos(texto:str):
+def mostrar_texto_con_diseño(texto:str):
     "Funcion que recibe un texto y lo muestra por pantalla"
     print(f"\n{'-' * 20}{texto}{'-'*20}\n")
 
@@ -51,14 +46,10 @@ def verificar_respuesta(lista:list, indice:int ,respuesta:str)->bool:
     if lista[indice]["respuesta_correcta"] == respuesta:
         retornar = True
         texto = "> ¡CORRECTO!"
-    ### Hacer una solo linea --------------------------------------------------------------------------------------------
-    mostrar_texto(f"{'-'*5}{texto}")
+    print(f"{'-'*5}{texto}")
     respuesta_correcta_id = lista[indice]['respuesta_correcta']
     respuesta_correcta_texto = lista[indice][f'respuesta_{respuesta_correcta_id}']
-
-    mostrar_texto(f"Respuesta correcta: {respuesta_correcta_id}) {respuesta_correcta_texto}")
-    
-    #------------------------------------------------------------------------------------------------
+    print(f"Respuesta correcta: {respuesta_correcta_id}) {respuesta_correcta_texto}")
     return retornar
 
 def eliminar_pregunta(lista:list, indice:int)->int:
@@ -74,31 +65,35 @@ def convertir_minusculas(palabra:str)-> str:
     return nueva_palbra
 
 def mostrar_tablero(lista:list, titulo:str):
-    mostrar_texto_dos(titulo)
-    mostrar_texto(lista)
+    mostrar_texto_con_diseño(titulo)
+    print(lista)
 
+
+# -----------------------------------------------------------------------------------------------------------------
 def jugar_turno(datos:dict,casilleros:list):
     iniciar_partida = datos["vida"]
     datos["movimientos"] += 1
-    mostrar_texto_dos(f"Movimineto {datos['movimientos']}")
-    mostrar_texto(f"{datos['nombre']}, estas la Casilla [{datos['ubicacion']}]") # Mostramos la pocision
+    mostrar_texto_con_diseño(f"Movimineto {datos['movimientos']}")
+    print(f"{datos['nombre']}, estas la Casilla [{datos['ubicacion']}]") # Mostramos la pocision
     dado = generar_num_aleatorio(1,6) # Tiramos dadoa
     datos["ubicacion"] += dado # Guardamos la pocision
     datos["dado"] = dado
     pocision = verificar_pocision(datos["ubicacion"], casilleros) # verificamos pocision
     puntos = verificar_puntos(0, datos["puntos"])
     if pocision and puntos:
-        mostrar_texto(f"!Total puntos: {datos['puntos']}")
+        print(f"!Total puntos: {datos['puntos']}")
     else:
         iniciar_partida = False
         if puntos:
-            mostrar_texto(f"Te salio el dado: {datos['dado']}")
-            mostrar_texto(f"{datos['nombre']}, ¡GANASTE!")
-            # Agregar archivo csv------------------------------------------
-            guardar_datos(datos, "w")
+            print(f"Te salio el dado: {datos['dado']}")
+            print(f"{datos['nombre']}, ¡GANASTE!")
+            # Agregar archivo csv------------------------------------------------------
+            trabajar_archivo(datos)    
         elif pocision:
-            mostrar_texto(f"Se quedo sin puntos: {datos['puntos']}")
+            print(f"Se quedo sin puntos: {datos['puntos']}")
     return iniciar_partida
+
+
 
 def verificar_pocision(ubicaion:int, casilleros:list) -> bool:
     retorno = False
@@ -109,10 +104,10 @@ def verificar_pocision(ubicaion:int, casilleros:list) -> bool:
 def verificar_puntos(minimo:int, puntos:int):
     seguir = True 
     if puntos <= minimo:
-        mostrar_texto("Se quedo sin puntos, juego terminado")
+        print("Se quedo sin puntos, juego terminado")
         seguir = False
     return seguir
-
+# ---------------------------------------------------------------
 def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ubicaion:int)-> int:
     casillero = casilleros[ubicaion - 1] 
     puntos_nuevos = 0
@@ -121,7 +116,7 @@ def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ub
     elif casillero == -1:
         puntos_nuevos -= 3000
     else:
-        mostrar_texto(f"{'-' * 20}¡Trivia!{'-'*20}")
+        print(f"{'-' * 20}¡Trivia!{'-'*20}")
         ind_preg_aleatoria = generar_num_aleatorio(0, len(preguntas) - 1) # genera un indice de pregunta aleatoria
         mostrar_pregunta(preguntas, ind_preg_aleatoria)
         respuesta = pedir_respuesta("a", "b", "c") # Respueta
@@ -133,7 +128,7 @@ def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ub
             puntos_nuevos -= 3000
         # Eliminamos preguntas
         eliminar_pregunta(preguntas, ind_preg_aleatoria)
-    mostrar_texto(f"Has obtenido: {puntos_nuevos} puntos")
+    print(f"Has obtenido: {puntos_nuevos} puntos")
     return puntos_nuevos
 
 
@@ -146,28 +141,33 @@ def reconpensa(casilleros:list, preguntas:list, list_ind_preg_correctas:list, ub
 
 
 
+# Archivo csv--------------------------------------------------------------------
+def trabajar_archivo(datos:dict):
+    #Existen
+    jugador = [datos["nombre"], datos["puntos"]]
+    try:
+        lista_datos = leer_datos()
+        agregar_dato(lista_datos, jugador)
+        ordenar_lista(lista_datos)
+        sobreescribir_archivo(lista_datos, "w")
+    #Crea uno nuevo
+    except:
+        crear_archivo(jugador, "w")
 
+def leer_datos()->list:
+    lista_jugadores = []
+    with open("score.csv","r") as archivo:
+        lineas = archivo.readlines()
+        for linea in lineas:
+            linea = convertir_minusculas(linea.rstrip())
+            if linea != "nombre, puntos":
+                lista_jugadores.append([linea])
+    return lista_jugadores
 
+def agregar_dato(historial:list, jugador:list):
+    dato_a_agregar = convertir_minusculas(f"{jugador[0]}, {jugador[1]}")
+    historial.append([dato_a_agregar])
 
-
-
-
-
-
-
-
-
-
-jugador = {
-    "nombre": "Eliam",
-    # "preguntas" : deepcopy(preguntas), # Preguntas trivia
-    "puntos" : 15000, # Puntos
-    "indices_preguntas_correcta" : [], # Preguntas correctas
-    "ubicacion" : 0,
-    "movimientos" : 0,
-    "ultimo_dado": None,
-    "vida": True
-}   
 def ordenar_lista(lista:list):
     for i in range(len(lista) - 1):
         for j in range(i + 1, len(lista)):
@@ -175,12 +175,15 @@ def ordenar_lista(lista:list):
                 aux = lista[i]
                 lista[i] = lista[j]
                 lista[j] = aux
-    return 
 
-def agregar_dato(historial:list, jugador:list):
-    dato_a_agregar = convertir_minusculas(f"{jugador[0]}, {jugador[1]}\n")
-
-    historial.append([dato_a_agregar])
+def sobreescribir_archivo(lista_datos,modo):
+    with open("score.csv", modo) as archivo:
+        #Emcabezado
+        texto_a_agregar = f"Nombre, Puntos \n"
+        archivo.write(texto_a_agregar)
+        for linea in lista_datos:
+            linea = f"{linea[0]}\n"
+            archivo.writelines(linea)
 
 def crear_archivo(lista:list, modo):
     with open("score.csv", modo) as archivo:
@@ -191,57 +194,7 @@ def crear_archivo(lista:list, modo):
         texto_a_agregar = f"{lista[0]}, {lista[1]}\n"
         archivo.write(texto_a_agregar)
 
-def sobreescribir_archivo(lista_datos,modo):
-    with open("score.csv", modo) as archivo:
-        #Emcabezado
-        texto_a_agregar = f"Nombre, Puntos \n"
-        archivo.write(texto_a_agregar)
 
-        for linea in lista_datos:
-                    
-
-            print(linea)
-            # archivo.write(linea)
-
-
-
-def leer_datos()->list:
-    lista_jugadores = []
-    with open("score.csv","r") as archivo:
-        lineas = archivo.readlines()
-        for linea in lineas:
-            linea_limpia = linea[:-2]
-            linea_limpia = convertir_minusculas(linea_limpia)
-            if linea_limpia != "nombre, puntos":
-                lista_jugadores.append([convertir_minusculas(linea)])
-    return lista_jugadores
-
-def trabajar_archivo(datos:dict):
-    #Existen
-    jugador = [datos["nombre"], datos["puntos"]]
-    try:
-        lista_datos = leer_datos()
-        # print(lista_datos)
-        # print("")
-
-        agregar_dato(lista_datos, jugador)
-        # print(lista_datos)
-        # print(" ")
-
-        ordenar_lista(lista_datos)
-        print(lista_datos)
-        
-        sobreescribir_archivo(lista_datos, "w")
-
-
-
-
-    #Crea uno nuevo
-    except:
-        crear_archivo(jugador, "w")
-
-
-trabajar_archivo(jugador)    
 
 
     
