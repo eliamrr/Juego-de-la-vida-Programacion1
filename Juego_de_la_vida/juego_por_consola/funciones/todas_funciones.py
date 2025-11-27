@@ -157,19 +157,40 @@ def trabajar_archivo(datos:dict):
     except:
         crear_archivo(jugador, "w")
 
-def leer_datos()->list:
+def leer_datos(nombre:str)->list:
     "Funcion que extrae los datos de un archivo csv existente y los limpia y los guiarda en una nueva lista y los retorna en una lista"
     lista_jugadores = []
-    with open("score.csv","r") as archivo:
+    with open(nombre,"r") as archivo:
         lineas = archivo.readlines()
         for linea in lineas:
-            linea = convertir_minusculas(linea.rstrip())
-            if linea != "nombre, puntos":
-                lista_jugadores.append([linea])
+            linea = linea.rstrip()
+            lista_jugadores.append([linea])
     return lista_jugadores
 
-def agregar_dato(historial:list, jugador:list):
+def crear_dic_jugador(lista)-> dict:
 
+    lista_diccioanrio = []
+
+    for elemento in lista: # ["gato"]
+        c = 0
+        for letra in elemento[0]: #"gato"
+            if letra  == ",":
+                jugador = {
+                    'nombre': f"{elemento[0][0: c:]}",
+                    'puntos': f"{elemento[0][c + 2:]}"
+                }
+            c += 1
+        lista_diccioanrio.append(jugador)
+    return lista_diccioanrio
+
+def mostrar_datos_csv(lista:list):
+    mostrar_texto_con_diseño("Jugadores")
+    for i in range(len(lista)):
+        print("{:<10} {:<5}".format(lista[i]["nombre"], lista[i]["puntos"]))
+        if i == 0:
+            print(" ")
+
+def agregar_dato(historial:list, jugador:list):
     dato_a_agregar = convertir_minusculas(f"{jugador[0]}, {jugador[1]}")
     historial.append([dato_a_agregar])
 
