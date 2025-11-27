@@ -78,28 +78,27 @@ def mostrar_tablero(lista:list, titulo:str):
     mostrar_texto_con_diseño(titulo)
     print(lista)
 
-def jugar_turno(datos:dict,casilleros:list):
-    iniciar_partida = datos["vida"]
+def jugar_turno(datos:dict,casilleros:list)->bool:
     datos["movimientos"] += 1
-    mostrar_texto_con_diseño(f"Movimineto {datos['movimientos']}")
+    mostrar_texto_con_diseño(f"Movimiento {datos['movimientos']}")
     print(f"{datos['nombre']}, estas la Casilla [{datos['ubicacion']}]") # Mostramos la pocision
     dado = generar_num_aleatorio(1,6) # Tiramos dadoa
     datos["ubicacion"] += dado # Guardamos la pocision
-    datos["dado"] = dado
     pocision = verificar_pocision(datos["ubicacion"], casilleros) # verificamos pocision
     puntos = verificar_puntos(0, datos["puntos"])
-    if pocision and puntos:
+    if pocision and puntos:    
         print(f"!Total puntos: {datos['puntos']}")
+        print(f"Te salio el dado: {dado}\nHas avanzado hasta la casilla: {datos['ubicacion']}\nFeliciades te salio: {casilleros[datos['ubicacion'] - 1]}")
     else:
-        iniciar_partida = False
+        datos["vida"] = False
         if puntos:
-            print(f"Te salio el dado: {datos['dado']}")
+            print(f"Te salio el dado: {dado}")
             print(f"{datos['nombre']}, ¡GANASTE!")
             # Agregar archivo csv------------------------------------------------------
             trabajar_archivo(datos)    
         elif pocision:
             print(f"Se quedo sin puntos: {datos['puntos']}")
-    return iniciar_partida
+    return datos["vida"]
 
 
 def verificar_pocision(ubicaion:int, casilleros:list) -> bool:
@@ -144,33 +143,6 @@ def trivia(preguntas:list, list_ind_preg_correctas:list)->int:
     # Eliminamos preguntas
     eliminar_pregunta(preguntas, ind_preg_aleatoria)
     return puntos_nuevos
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Archivo csv--------------------------------------------------------------------
 def trabajar_archivo(datos:dict):
     "Funcion que recibe un dicionario y trabaja con los distintos metodos de archivos depenediendo si existe o no existe un archivo existente"

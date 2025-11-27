@@ -6,35 +6,37 @@ mostrar_texto_con_diseño("El juego de la vida")
 print("a) Jugar\nb) Score \nc) Salir\n")
 opcion = pedir_respuesta("a", "b", "c")
 if opcion == "a":
-    nombre = pedir_nombre() # pedimos Nombre
-    print(f"Hola, {nombre}. ¿Deseas jugar?:") # Bienvenida preguntar si desea jugar?
-    iniciar_partida = desea_jugar()
-    # Logica
-    if iniciar_partida: #Si quiere jugar
-        mostrar_tablero(casilleros, "Tablero") #Tablero
-        # Datos del jugador
-        jugador = {
-            "nombre": nombre,
-            "preguntas" : deepcopy(preguntas), # Preguntas trivia
-            "puntos" : 15000, # Puntos
-            "indices_preguntas_correcta" : [], # Preguntas correctas
-            "ubicacion" : 0,
-            "movimientos" : 0, #estetica
-            "ultimo_dado": None, #estetica
-            "vida": True
-        }
-        while jugador["vida"]:  ## Empieza el juego
-            jugador["vida"] = jugar_turno(jugador,casilleros)
-            # Reconpensas
-            if jugador["vida"]:
-                print(f"Te salio el dado: {jugador['dado']}\nHas avanzado hasta la casilla: {jugador['ubicacion']}\nFeliciades te salio: {casilleros[jugador['ubicacion'] - 1]}")
-                jugador['puntos'] += reconpensa(casilleros, preguntas, jugador['indices_preguntas_correcta'], jugador['ubicacion'])        
-                print(f"Puntos actualizados: {jugador['puntos']}")
-                # Deseas seguir jugando -------------------------------
-                print(f"{'-'*50}\n{nombre}, ¿deseas volver a tirar el dado?")
-                jugador["vida"]= desea_jugar()
-            if jugador["vida"] == False:
-                print(f"\n¡{jugador['nombre']}, gracias por jugar!\nPuntos finales: {jugador['puntos']}")
+    jugador = {
+        "nombre": None,
+        "preguntas" : deepcopy(preguntas), # Preguntas trivia
+        "puntos" : 15000, # Puntos
+        "indices_preguntas_correcta" : [], # Preguntas correctas
+        "ubicacion" : 0,
+        "movimientos" : 0, #estetica
+        "vida": None
+    }
+    jugador["nombre"] = pedir_nombre() # pedimos Nombre
+    mostrar_tablero(casilleros, "Tablero") #Tablero
+    print(f"\nHola, {jugador['nombre']} bienvenido!. ¿Deseas tirar el primer dado?:") # Bienvenida preguntar si desea jugar?
+    jugador["vida"] = desea_jugar()
+    
+
+    while jugador["vida"]:  ## Empieza el juego
+        jugador["vida"] = jugar_turno(jugador,casilleros)
+        # Reconpensas
+        if jugador["vida"]:
+            jugador['puntos'] += reconpensa(casilleros, preguntas, jugador['indices_preguntas_correcta'], jugador['ubicacion'])        
+            print(f"Puntos actualizados: {jugador['puntos']}")
+            # Deseas seguir jugando -------------------------------
+            print(f"{'-'*50}\n{jugador['nombre']}, ¿deseas volver a tirar el dado?")
+            jugador["vida"]= desea_jugar()
+    print(f"\n¡{jugador['nombre']}, gracias por jugar!\nPuntos finales: {jugador['puntos']}")
+
+
+
+
+
+                
 elif opcion == "b":
     try:
         lista_datos = leer_datos('sads.csv')
