@@ -29,11 +29,9 @@ def convertir_minusculas(palabra:str)-> str:
         nueva_palbra += letra
     return nueva_palbra
 
-
 def mostrar_texto_con_diseño(texto:str):
     "Funcion que recibe un texto y lo muestra por pantalla con un diseño."
     print(f"\n{'-' * 20}{texto}{'-'*20}\n")
-
 
 def generar_num_aleatorio(desde:int, hasta:int)-> int:
     "Funcion que recibe dos parametros que van a hacer de rango para generar un numero aleatorio y despues lo retorna."
@@ -72,7 +70,6 @@ def eliminar_pregunta(lista:list, indice:int)->int:
     "Funcion que recibe dos parametros la primera es una lista y el segundo es un indice despues la elimina el el elmento que concida con el indice en la lista "
     del lista[indice]
 
-
 def mostrar_tablero(lista:list, titulo:str):
     "Funcion que recibe una lista y un string y lo muestra con un diseño"
     mostrar_texto_con_diseño(titulo)
@@ -99,7 +96,6 @@ def jugar_turno(datos:dict,casilleros:list)->bool:
         elif pocision:
             print(f"Se quedo sin puntos: {datos['puntos']}")
     return datos["vida"]
-
 
 def verificar_pocision(ubicaion:int, casilleros:list) -> bool:
     "Funcion que recibe dos parametros un numero y una lista y va a devolver un bool, el cual dependera si el numero esta dentro o fuera de la cantidad de elementos del casilleros"

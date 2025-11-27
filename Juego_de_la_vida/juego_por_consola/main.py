@@ -19,8 +19,6 @@ if opcion == "a":
     mostrar_tablero(casilleros, "Tablero") #Tablero
     print(f"\nHola, {jugador['nombre']} bienvenido!. ¿Deseas tirar el primer dado?:") # Bienvenida preguntar si desea jugar?
     jugador["vida"] = desea_jugar()
-    
-
     while jugador["vida"]:  ## Empieza el juego
         jugador["vida"] = jugar_turno(jugador,casilleros)
         # Reconpensas
@@ -30,24 +28,16 @@ if opcion == "a":
             # Deseas seguir jugando -------------------------------
             print(f"{'-'*50}\n{jugador['nombre']}, ¿deseas volver a tirar el dado?")
             jugador["vida"]= desea_jugar()
-    print(f"\n¡{jugador['nombre']}, gracias por jugar!\nPuntos finales: {jugador['puntos']}")
-
-
-
-
-
-                
+    print(f"\n¡{jugador['nombre']}, gracias por jugar!\nPuntos finales: {jugador['puntos']}")          
 elif opcion == "b":
     try:
-        lista_datos = leer_datos('sads.csv')
+        lista_datos = leer_datos('score.csv')
         lista_datos = crear_dic_jugador(lista_datos)
         mostrar_datos_csv(lista_datos)
     except:
         print("No hay datos para mostrar")
 else: #No quiere jugar
     print(f"!Entendido¡, sera para la proxima")
-
-
 
 
 
