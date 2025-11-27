@@ -2,11 +2,9 @@ from funciones.todas_funciones import *
 from recursos.preguntas import *
 from copy import deepcopy
 casilleros = [0, 1, -1, -1, 0, 1, -1, -1, 0, 1, -1, 0, 1, 0, 1] # Lista de 15 casilleros (elementos del 0 al 14) para el tablero del Juego de la Vida.
-
 mostrar_texto_con_diseño("El juego de la vida")
 print("a) Jugar\nb) Score \nc) Salir\n")
 opcion = pedir_respuesta("a", "b", "c")
-
 if opcion == "a":
     nombre = pedir_nombre() # pedimos Nombre
     print(f"Hola, {nombre}. ¿Deseas jugar?:") # Bienvenida preguntar si desea jugar?
@@ -37,7 +35,6 @@ if opcion == "a":
                 jugador["vida"]= desea_jugar()
             if jugador["vida"] == False:
                 print(f"\n¡{jugador['nombre']}, gracias por jugar!\nPuntos finales: {jugador['puntos']}")
-
 elif opcion == "b":
     try:
         lista_datos = leer_datos('sads.csv')
@@ -45,23 +42,8 @@ elif opcion == "b":
         mostrar_datos_csv(lista_datos)
     except:
         print("No hay datos para mostrar")
-
 else: #No quiere jugar
     print(f"!Entendido¡, sera para la proxima")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

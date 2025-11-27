@@ -145,17 +145,43 @@ def trivia(preguntas:list, list_ind_preg_correctas:list)->int:
     eliminar_pregunta(preguntas, ind_preg_aleatoria)
     return puntos_nuevos
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Archivo csv--------------------------------------------------------------------
 def trabajar_archivo(datos:dict):
     "Funcion que recibe un dicionario y trabaja con los distintos metodos de archivos depenediendo si existe o no existe un archivo existente"
-    jugador = [datos["nombre"], datos["puntos"]]
+    jugador = convertir_minusculas(f"{datos['nombre']}, {datos['puntos']}")
     try:
-        lista_datos = leer_datos()
-        agregar_dato(lista_datos, jugador)
+        lista_datos = leer_datos("score.csv")
+        lista_datos.append([jugador])
         ordenar_lista(lista_datos)
-        sobreescribir_archivo(lista_datos, "w")
+        sobreescribir_archivo(lista_datos)
     except:
-        crear_archivo(jugador, "w")
+        crear_archivo([jugador])
 
 def leer_datos(nombre:str)->list:
     "Funcion que extrae los datos de un archivo csv existente y los limpia y los guiarda en una nueva lista y los retorna en una lista"
@@ -168,9 +194,7 @@ def leer_datos(nombre:str)->list:
     return lista_jugadores
 
 def crear_dic_jugador(lista)-> dict:
-
     lista_diccioanrio = []
-
     for elemento in lista: # ["gato"]
         c = 0
         for letra in elemento[0]: #"gato"
@@ -190,36 +214,30 @@ def mostrar_datos_csv(lista:list):
         if i == 0:
             print(" ")
 
-def agregar_dato(historial:list, jugador:list):
-    dato_a_agregar = convertir_minusculas(f"{jugador[0]}, {jugador[1]}")
-    historial.append([dato_a_agregar])
-
 def ordenar_lista(lista:list):
     "Funcion que recibe una lista de listas por parametro y la va a ordenar de manera ascendente por el nombre"
-    for i in range(len(lista) - 1):
+    for i in range(1,len(lista) - 1):
         for j in range(i + 1, len(lista)):
             if lista[i][0] > lista[j][0]:
                 aux = lista[i]
                 lista[i] = lista[j]
                 lista[j] = aux
 
-def sobreescribir_archivo(lista_datos,modo):
+def sobreescribir_archivo(lista_datos):
     "Funcion que recibe una lista modificada para agregarla a un archivo csv ya existente"
-    with open("score.csv", modo) as archivo:
-        texto_a_agregar = f"Nombre, Puntos \n"
-        archivo.write(texto_a_agregar)
+    with open("score.csv", "w") as archivo:
         for linea in lista_datos:
             linea = f"{linea[0]}\n"
             archivo.writelines(linea)
 
-def crear_archivo(lista:list, modo):
+def crear_archivo(lista:list):
     "Funcion que recibe una lista y crea un nuevo archivo y escribe los datos de la lista pasada por parametros"
-    with open("score.csv", modo) as archivo:
+    with open("score.csv", "w") as archivo:
         #Emcabezado
         texto_a_agregar = f"Nombre, Puntos \n"
         archivo.write(texto_a_agregar)
         #Escibimos datos
-        texto_a_agregar = f"{lista[0]}, {lista[1]}\n"
+        texto_a_agregar = f"{lista[0]}\n"
         archivo.write(texto_a_agregar)
 
 
